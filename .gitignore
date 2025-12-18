@@ -1,0 +1,8 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project artifacts
+.agent/
+.gemini/
+*.log
