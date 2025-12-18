@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TM30 Helper - Manage Persons</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <img src="icons/icon128.png" alt="Icon" class="header-icon">
+            <h1>TM30 Helper</h1>
+            <p>Store family profiles for instant auto-filling of TM30 Immigration forms</p>
+        </header>
+
+        <section class="add-person">
+            <h2 id="form-title">Add New Person</h2>
+            <form id="person-form">
+                <input type="hidden" id="personId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="passportNo">Passport Number *</label>
+                        <input type="text" id="passportNo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nationality">Nationality *</label>
+                        <input type="text" id="nationality" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender *</label>
+                        <select id="gender" required>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDate">Birth Date (DD/MM/YYYY) *</label>
+                        <input type="text" id="birthDate" required>
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label for="phoneNo">Phone Number</label>
+                        <input type="text" id="phoneNo">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" id="submit-btn" class="btn-primary">Save Profile</button>
+                    <button type="button" id="cancel-edit" class="btn-secondary" style="display: none;">Cancel</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="person-list-section">
+            <h2>Saved Profiles</h2>
+            <div id="person-list" class="person-list">
+                <!-- Persons will be injected here -->
+                <p class="empty-msg">No profiles saved yet. Add your first person above.</p>
+            </div>
+        </section>
+    </div>
+    <script src="options.js"></script>
+</body>
+
+</html>

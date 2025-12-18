@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:opsz,wght@6..12,400..700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        body {
+            width: 320px;
+            padding: 16px;
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            margin: 0 0 16px 0;
+            color: #1a73e7;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        h2 img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .person-item {
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .person-item:hover {
+            background: #f0f7ff;
+        }
+
+        .person-info {
+            flex-grow: 1;
+        }
+
+        .name {
+            font-weight: 600;
+            display: block;
+            color: #1e293b;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .details {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .btn-edit-popup {
+            padding: 6px;
+            border-radius: 4px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            opacity: 0.4;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-edit-popup:hover {
+            background: #f0f7ff;
+            opacity: 1;
+            color: #1a73e7;
+        }
+
+        .footer {
+            margin-top: 12px;
+            padding-top: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-manage-footer {
+            background: #e0f2fe;
+            color: #1a73e6;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .btn-manage-footer:hover {
+            background: #bae6fd;
+        }
+
+        .empty {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            padding: 20px 10px;
+            background: white;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2><img src="icons/icon48.png" alt="Icon"> TM30 Helper</h2>
+    <div id="person-list">
+        <!-- List will be injected here -->
+    </div>
+    <div class="footer">
+        <button id="open-options" class="btn-manage-footer">Manage Profiles</button>
+    </div>
+    <script src="popup.js"></script>
+</body>
+
+</html>
