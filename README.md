@@ -1,5 +1,7 @@
 # 👮 Thai TM30 Helper
 
+![Popup Interface](images/popup.png)
+
 **Thai TM30 Helper** is a lightweight, privacy-focused Chrome extension designed to simplify the mandatory Notification of Residence for Foreigners (TM30) in Thailand. It automates the tedious task of filling out immigration forms by storing family/guest profiles and injecting them instantly into the official TM30 website.
 
 ## ✨ Features
