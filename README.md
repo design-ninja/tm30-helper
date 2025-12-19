@@ -8,6 +8,7 @@
 - **Instant Auto-fill:** Single-click injection into the official TM30 web forms.
 - **Smart Mapping:** Automatically handles complex fields like Nationalities, Gender, and Dates.
 - **Modern UI:** Clean, intuitive interface with a prioritized workflow.
+- **🇹🇭 Thai language support.**
 - **Privacy First:** All data is stored locally in your browser's storage. Nothing is sent to external servers or cloud services.
 
 ## 🚀 Installation
