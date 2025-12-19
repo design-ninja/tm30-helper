@@ -13,6 +13,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         return div.innerHTML;
     };
 
+    // Auto-format birth date DD/MM/YYYY
+    const birthDateInput = document.getElementById('birthDate');
+    birthDateInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.slice(0, 2) + '/' + value.slice(2);
+        }
+        if (value.length >= 5) {
+            value = value.slice(0, 5) + '/' + value.slice(5);
+        }
+        e.target.value = value.slice(0, 10);
+    });
+
     // Load and render persons
     const loadPersons = async () => {
         const persons = await Storage.getPersons();
