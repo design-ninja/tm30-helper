@@ -33,6 +33,17 @@ body {
     line-height: 1.5;
 }
 
+/* Common empty state */
+.EmptyState {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    padding: 20px 10px;
+    background: var(--card-bg);
+    border: 1px dashed var(--border-dashed);
+    border-radius: var(--radius);
+}
+
 /* ============================================
    POPUP STYLES
    ============================================ */
@@ -136,15 +147,7 @@ body.Popup {
     background: var(--primary-light-hover);
 }
 
-.Popup__Empty {
-    text-align: center;
-    color: var(--text-light);
-    font-size: 0.9rem;
-    padding: 20px 10px;
-    background: var(--card-bg);
-    border: 1px dashed var(--border-dashed);
-    border-radius: var(--radius);
-}
+/* Using .EmptyState instead */
 
 /* ============================================
    OPTIONS PAGE STYLES
@@ -341,12 +344,4 @@ body.Options {
     background: var(--danger-bg-hover);
 }
 
-.Options__EmptyMsg {
-    text-align: center;
-    color: var(--text-light);
-    font-size: 0.9rem;
-    padding: 20px 10px;
-    background: var(--card-bg);
-    border: 1px dashed var(--border-dashed);
-    border-radius: var(--radius);
-}
+/* Using .EmptyState instead */

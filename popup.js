@@ -1,41 +1,51 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const personList = document.getElementById('person-list');
     const openOptions = document.getElementById('open-options');
 
     // Load persons for selection
-    chrome.storage.local.get(['persons'], (result) => {
-        const persons = result.persons || [];
-        if (persons.length === 0) {
-            personList.innerHTML = '<div class="Popup__Empty">No saved profiles found.<br>Add them in settings first.</div>';
-            return;
-        }
+    const persons = await Storage.getPersons();
 
+    if (persons.length === 0) {
+        personList.innerHTML = '<div class="EmptyState">No saved profiles found.<br>Add them in settings first.</div>';
+    } else {
         persons.forEach(person => {
             const item = document.createElement('div');
             item.className = 'Popup__PersonItem';
-            item.innerHTML = `
-                <div class="Popup__PersonInfo">
-                    <span class="Popup__PersonName">${person.firstName} ${person.lastName}</span>
-                    <span class="Popup__PersonDetails">${person.passportNo} | ${person.nationality}</span>
-                </div>
-                <button class="Popup__BtnEdit" title="Edit Profile">✏️</button>
-            `;
+
+            const info = document.createElement('div');
+            info.className = 'Popup__PersonInfo';
+
+            const name = document.createElement('span');
+            name.className = 'Popup__PersonName';
+            name.textContent = `${person.firstName} ${person.lastName}`;
+
+            const details = document.createElement('span');
+            details.className = 'Popup__PersonDetails';
+            details.textContent = `${person.passportNo} | ${person.nationality}`;
+
+            info.appendChild(name);
+            info.appendChild(details);
 
             // Click on info area to fill form
-            item.querySelector('.Popup__PersonInfo').addEventListener('click', () => {
+            info.addEventListener('click', () => {
                 fillForm(person);
                 window.close();
             });
 
-            // Click on edit icon to open options in edit mode
-            item.querySelector('.Popup__BtnEdit').addEventListener('click', (e) => {
+            const editBtn = document.createElement('button');
+            editBtn.className = 'Popup__BtnEdit';
+            editBtn.title = 'Edit Profile';
+            editBtn.textContent = '✏️';
+            editBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 chrome.tabs.create({ url: `options.html?edit=${person.id}` });
             });
 
+            item.appendChild(info);
+            item.appendChild(editBtn);
             personList.appendChild(item);
         });
-    });
+    }
 
     // Send message to content script to fill the form
     const fillForm = (person) => {

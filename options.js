@@ -1,63 +1,50 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const form = document.getElementById('person-form');
     const personList = document.getElementById('person-list');
     const personIdInput = document.getElementById('personId');
     const submitBtn = document.getElementById('submit-btn');
     const cancelEditBtn = document.getElementById('cancel-edit');
 
-    // Load persons from storage
-    const loadPersons = () => {
-        chrome.storage.local.get(['persons'], (result) => {
-            const persons = result.persons || [];
-            renderPersons(persons);
-        });
+    // XSS protection
+    const escapeHtml = (text) => {
+        if (text == null) return '';
+        const div = document.createElement('div');
+        div.textContent = String(text);
+        return div.innerHTML;
     };
 
-    // Save or Update person to storage
-    const savePerson = (person) => {
-        chrome.storage.local.get(['persons'], (result) => {
-            const persons = result.persons || [];
-            const id = personIdInput.value;
+    // Load and render persons
+    const loadPersons = async () => {
+        const persons = await Storage.getPersons();
+        renderPersons(persons);
+    };
 
-            if (id) {
-                // Update existing
-                const index = persons.findIndex(p => p.id == id);
-                if (index !== -1) {
-                    persons[index] = { ...persons[index], ...person };
-                }
-            } else {
-                // Add new
-                persons.push({ id: Date.now(), ...person });
-            }
-
-            chrome.storage.local.set({ persons }, () => {
-                resetForm();
-                loadPersons();
-            });
-        });
+    // Save or Update person
+    const savePerson = async (person) => {
+        const existingId = personIdInput.value || null;
+        await Storage.savePerson(person, existingId);
+        resetForm();
+        loadPersons();
     };
 
     // Edit person - Load data into form
-    const editPerson = (id) => {
-        chrome.storage.local.get(['persons'], (result) => {
-            const persons = result.persons || [];
-            const person = persons.find(p => p.id == id);
-            if (person) {
-                personIdInput.value = person.id;
-                document.getElementById('firstName').value = person.firstName;
-                document.getElementById('lastName').value = person.lastName;
-                document.getElementById('passportNo').value = person.passportNo;
-                document.getElementById('nationality').value = person.nationality;
-                document.getElementById('gender').value = person.gender;
-                document.getElementById('birthDate').value = person.birthDate;
-                document.getElementById('phoneNo').value = person.phoneNo || '';
+    const editPerson = async (id) => {
+        const person = await Storage.getPersonById(id);
+        if (person) {
+            personIdInput.value = person.id;
+            document.getElementById('firstName').value = person.firstName;
+            document.getElementById('lastName').value = person.lastName;
+            document.getElementById('passportNo').value = person.passportNo;
+            document.getElementById('nationality').value = person.nationality;
+            document.getElementById('gender').value = person.gender;
+            document.getElementById('birthDate').value = person.birthDate;
+            document.getElementById('phoneNo').value = person.phoneNo || '';
 
-                document.getElementById('form-title').innerText = 'Edit Profile';
-                submitBtn.innerText = 'Update Profile';
-                cancelEditBtn.style.display = 'inline-block';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
+            document.getElementById('form-title').innerText = 'Edit Profile';
+            submitBtn.innerText = 'Update Profile';
+            cancelEditBtn.style.display = 'inline-block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     };
 
     const resetForm = () => {
@@ -68,22 +55,17 @@ document.addEventListener('DOMContentLoaded', () => {
         cancelEditBtn.style.display = 'none';
     };
 
-    // Delete person from storage
-    const deletePerson = (id) => {
+    // Delete person
+    const deletePerson = async (id) => {
         if (!confirm('Are you sure you want to delete this profile?')) return;
-        chrome.storage.local.get(['persons'], (result) => {
-            const persons = result.persons || [];
-            const updatedPersons = persons.filter(p => p.id !== id);
-            chrome.storage.local.set({ persons: updatedPersons }, () => {
-                loadPersons();
-            });
-        });
+        await Storage.deletePerson(id);
+        loadPersons();
     };
 
-    // Render list of persons
+    // Render list of persons with XSS protection
     const renderPersons = (persons) => {
         if (persons.length === 0) {
-            personList.innerHTML = '<p class="Options__EmptyMsg">No profiles saved yet. Add your first person above.</p>';
+            personList.innerHTML = '<p class="EmptyState">No profiles saved yet. Add your first person above.</p>';
             return;
         }
 
@@ -91,48 +73,63 @@ document.addEventListener('DOMContentLoaded', () => {
         persons.forEach(person => {
             const card = document.createElement('div');
             card.className = 'Options__PersonCard';
-            card.innerHTML = `
-                <div class="Options__PersonInfo">
-                    <h3>${person.firstName} ${person.lastName}</h3>
-                    <p>Passport: ${person.passportNo} | Nationality: ${person.nationality}</p>
-                </div>
-                <div class="Options__PersonActions">
-                    <button class="Options__BtnEdit" data-id="${person.id}">Edit</button>
-                    <button class="Options__BtnDelete" data-id="${person.id}">Delete</button>
-                </div>
-            `;
+
+            const info = document.createElement('div');
+            info.className = 'Options__PersonInfo';
+
+            const name = document.createElement('h3');
+            name.textContent = `${person.firstName} ${person.lastName}`;
+
+            const details = document.createElement('p');
+            details.textContent = `Passport: ${person.passportNo} | Nationality: ${person.nationality}`;
+
+            info.appendChild(name);
+            info.appendChild(details);
+
+            const actions = document.createElement('div');
+            actions.className = 'Options__PersonActions';
+
+            const editBtn = document.createElement('button');
+            editBtn.className = 'Options__BtnEdit';
+            editBtn.textContent = 'Edit';
+            editBtn.addEventListener('click', () => editPerson(person.id));
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'Options__BtnDelete';
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.addEventListener('click', () => deletePerson(person.id));
+
+            actions.appendChild(editBtn);
+            actions.appendChild(deleteBtn);
+
+            card.appendChild(info);
+            card.appendChild(actions);
             personList.appendChild(card);
-        });
-
-        // Event listeners
-        document.querySelectorAll('.Options__BtnEdit').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = parseInt(e.target.getAttribute('data-id'));
-                editPerson(id);
-            });
-        });
-
-        document.querySelectorAll('.Options__BtnDelete').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = parseInt(e.target.getAttribute('data-id'));
-                deletePerson(id);
-            });
         });
     };
 
-    // Form submission
-    form.addEventListener('submit', (e) => {
+    // Form submission with validation
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        const birthDate = document.getElementById('birthDate').value;
+        const birthDateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+
+        if (!birthDateRegex.test(birthDate)) {
+            alert('Please enter birth date in DD/MM/YYYY format');
+            return;
+        }
+
         const formData = {
             firstName: document.getElementById('firstName').value,
             lastName: document.getElementById('lastName').value,
             passportNo: document.getElementById('passportNo').value,
             nationality: document.getElementById('nationality').value,
             gender: document.getElementById('gender').value,
-            birthDate: document.getElementById('birthDate').value,
+            birthDate: birthDate,
             phoneNo: document.getElementById('phoneNo').value
         };
-        savePerson(formData);
+        await savePerson(formData);
     });
 
     cancelEditBtn.addEventListener('click', resetForm);
@@ -140,12 +137,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial load and URL-based edit check
     const urlParams = new URLSearchParams(window.location.search);
     const editId = urlParams.get('edit');
-    
-    chrome.storage.local.get(['persons'], (result) => {
-        const persons = result.persons || [];
-        renderPersons(persons);
-        if (editId) {
-            editPerson(parseInt(editId));
-        }
-    });
+
+    await loadPersons();
+    if (editId) {
+        editPerson(parseInt(editId));
+    }
 });
