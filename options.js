@@ -174,6 +174,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('gender').value = person.gender;
             document.getElementById('birthDate').value = person.birthDate;
             document.getElementById('phoneNo').value = person.phoneNo || '';
+            document.getElementById('numberOfNights').value = person.numberOfNights || '';
 
             document.getElementById('form-title').innerText = 'Edit Profile';
             submitBtn.innerText = 'Update Profile';
@@ -271,7 +272,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             nationalityCode: nationalityCodeInput.value,
             gender: document.getElementById('gender').value,
             birthDate: birthDate,
-            phoneNo: document.getElementById('phoneNo').value
+            phoneNo: document.getElementById('phoneNo').value,
+            numberOfNights: document.getElementById('numberOfNights').value || ''
         };
         await savePerson(formData);
     });

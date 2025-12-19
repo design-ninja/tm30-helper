@@ -68,7 +68,8 @@ async function fillTM30Form(person) {
         { name: 'Birth Day', val: d, selectors: ['input[formcontrolname="dayOfBirth"]'] },
         { name: 'Birth Month', val: m, selectors: ['input[formcontrolname="monthOfBirth"]'] },
         { name: 'Birth Year', val: y, selectors: ['input[formcontrolname="yearOfBirth"]'] },
-        { name: 'Phone No.', val: person.phoneNo, selectors: ['input[formcontrolname="phoneNo"]'] }
+        { name: 'Phone No.', val: person.phoneNo, selectors: ['input[formcontrolname="phoneNo"]'] },
+        { name: 'Number of Nights', val: person.numberOfNights, selectors: ['input[formcontrolname="nightOfStay"]'] }
     ];
 
     // 1. Fill standard fields
