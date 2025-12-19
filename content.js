@@ -89,10 +89,18 @@ async function fillTM30Form(person) {
 
     // 3. Fill Nationality (Autocomplete)
     await delay(DELAYS.FIELD_LOAD);
-    const nationEl = findElement(['input[formcontrolname="key"]']);
+    const nationEl = findElement([
+        'input[formcontrolname="key"]',
+        'input[formcontrolname="nationality"]',
+        'input[formcontrolname="nationalityKey"]',
+        'input[matautocomplete]',
+        'input[aria-autocomplete="list"]'
+    ]);
     if (nationEl) {
         console.log('TM30 Helper: Final step - Nationality');
         await setAutocompleteValue(nationEl, person.nationality);
+    } else {
+        console.warn('TM30 Helper: Nationality field not found!');
     }
 
     console.log('TM30 Helper: Sequence complete');
@@ -153,29 +161,29 @@ async function setSelectValue(el, value) {
 async function setAutocompleteValue(el, value) {
     el.focus();
     el.click();
-
+    
     const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
     nativeSetter.call(el, '');
     el.dispatchEvent(new Event('input', { bubbles: true }));
 
     console.log(`TM30 Helper: Typing nationality: ${value}`);
 
-    // Modern approach: use InputEvent instead of deprecated execCommand
-    nativeSetter.call(el, value);
-    el.dispatchEvent(new InputEvent('input', {
-        inputType: 'insertText',
-        data: value,
-        bubbles: true,
-        cancelable: true
-    }));
+    try {
+        document.execCommand('insertText', false, value);
+    } catch (e) {
+        console.warn('TM30 Helper: execCommand failed, falling back to property setter');
+        nativeSetter.call(el, value);
+    }
+
+    el.dispatchEvent(new Event('input', { bubbles: true }));
     el.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true }));
 
-    await delay(DELAYS.AUTOCOMPLETE);
+    await delay(1500);
     const options = Array.from(document.querySelectorAll('mat-option, .mat-autocomplete-panel mat-option'));
     console.log(`TM30 Helper: Options found: ${options.length}`);
 
     const option = options.find(opt => opt.innerText.toLowerCase().includes(value.toLowerCase())) || options[0];
-
+    
     if (option) {
         console.log('TM30 Helper: Clicking option:', option.innerText);
         option.click();
@@ -185,3 +193,4 @@ async function setAutocompleteValue(el, value) {
         console.error('TM30 Helper: No nationality options appeared!');
     }
 }
+
