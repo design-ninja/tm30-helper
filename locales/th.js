@@ -1,8 +1,8 @@
 // Thai translations
 const LOCALE_TH = {
     // Options page
-    "options.title": "Thai TM-30 Helper - จัดการโปรไฟล์",
-    "options.header": "Thai TM-30 Helper",
+    "options.title": "Thai TM30 Helper - จัดการโปรไฟล์",
+    "options.header": "Thai TM30 Helper",
     "options.subtitle": "บันทึกโปรไฟล์เพื่อกรอกแบบฟอร์ม TM30 อัตโนมัติ",
     "options.formTitle.add": "เพิ่มบุคคลใหม่",
     "options.formTitle.edit": "แก้ไขโปรไฟล์",
@@ -40,7 +40,7 @@ const LOCALE_TH = {
     "options.language": "ภาษา",
 
     // Popup
-    "popup.header": "Thai TM-30 Helper",
+    "popup.header": "Thai TM30 Helper",
     "popup.manageProfiles": "จัดการโปรไฟล์",
     "popup.emptyState": "ไม่พบโปรไฟล์ที่บันทึกไว้",
     "popup.emptyStateHint": "เพิ่มโปรไฟล์ในการตั้งค่าก่อน",

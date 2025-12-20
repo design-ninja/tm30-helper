@@ -1,8 +1,8 @@
 // English translations
 const LOCALE_EN = {
     // Options page
-    "options.title": "Thai TM-30 Helper - Manage Profiles",
-    "options.header": "Thai TM-30 Helper",
+    "options.title": "Thai TM30 Helper - Manage Profiles",
+    "options.header": "Thai TM30 Helper",
     "options.subtitle": "Save profiles to auto-fill TM30 forms instantly",
     "options.formTitle.add": "Add New Person",
     "options.formTitle.edit": "Edit Profile",
@@ -40,7 +40,7 @@ const LOCALE_EN = {
     "options.language": "Language",
 
     // Popup
-    "popup.header": "Thai TM-30 Helper",
+    "popup.header": "Thai TM30 Helper",
     "popup.manageProfiles": "Manage Profiles",
     "popup.emptyState": "No saved profiles found.",
     "popup.emptyStateHint": "Add them in settings first.",
