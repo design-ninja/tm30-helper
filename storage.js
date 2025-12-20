@@ -1,7 +1,15 @@
 // Storage module for TM30 Helper
 // Provides async API for working with chrome.storage.local
 
+// Counter to ensure unique IDs even when called rapidly (e.g., during Excel import)
+let idCounter = 0;
+
 const Storage = {
+    generateUniqueId() {
+        idCounter++;
+        return `${Date.now()}_${idCounter}`;
+    },
+
     async getPersons() {
         return new Promise(resolve => {
             chrome.storage.local.get(['persons'], (result) => {
@@ -25,7 +33,7 @@ const Storage = {
                 persons[index] = { ...persons[index], ...person };
             }
         } else {
-            persons.push({ id: Date.now(), ...person });
+            persons.push({ id: this.generateUniqueId(), ...person });
         }
 
         await this.savePersons(persons);

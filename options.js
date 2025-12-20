@@ -238,6 +238,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const deletePerson = async (id) => {
         if (!confirm(I18n.t('options.confirm.delete'))) return;
         await Storage.deletePerson(id);
+        
+        // Reset form if the deleted profile was being edited
+        if (personIdInput.value == id) {
+            resetForm();
+        }
+        
         loadPersons();
     };
 
