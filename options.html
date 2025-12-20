@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thai TM-30 Helper - Manage Profiles</title>
+    <title>Thai TM30 Helper - Manage Profiles</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -12,7 +12,7 @@
     <div class="Options__Container">
         <header class="Options__Header">
             <img src="icons/icon128.png" alt="Icon" class="Options__HeaderIcon">
-            <h1 class="Options__Title" data-i18n="options.header">Thai TM-30 Helper</h1>
+            <h1 class="Options__Title" data-i18n="options.header">Thai TM30 Helper</h1>
             <p class="Options__Subtitle" data-i18n="options.subtitle">Save profiles to auto-fill TM30 forms instantly
             </p>
         </header>
@@ -57,20 +57,27 @@
                         </select>
                     </div>
                     <div class="Options__FormGroup">
-                        <label for="birthDate" class="Options__Label"><span data-i18n="options.label.birthDate">Birth
-                                Date</span> <span class="required">*</span></label>
+                        <label for="birthDate" class="Options__Label" data-i18n="options.label.birthDate">Birth
+                            Date</label>
                         <input type="text" id="birthDate" class="Options__Input" pattern="\d{2}/\d{2}/\d{4}"
-                            placeholder="DD/MM/YYYY" required>
+                            placeholder="DD/MM/YYYY">
+                    </div>
+                    <div class="Options__FormGroup">
+                        <label for="checkInDate" class="Options__Label" data-i18n="options.label.checkInDate">Check-in
+                            Date</label>
+                        <input type="text" id="checkInDate" class="Options__Input" pattern="\d{2}/\d{2}/\d{4}"
+                            placeholder="DD/MM/YYYY">
+                    </div>
+                    <div class="Options__FormGroup">
+                        <label for="checkOutDate" class="Options__Label"
+                            data-i18n="options.label.checkOutDate">Check-out Date</label>
+                        <input type="text" id="checkOutDate" class="Options__Input" pattern="\d{2}/\d{2}/\d{4}"
+                            placeholder="DD/MM/YYYY">
                     </div>
                     <div class="Options__FormGroup">
                         <label for="phoneNo" class="Options__Label" data-i18n="options.label.phoneNo">Phone
                             Number</label>
                         <input type="text" id="phoneNo" class="Options__Input">
-                    </div>
-                    <div class="Options__FormGroup">
-                        <label for="numberOfNights" class="Options__Label"
-                            data-i18n="options.label.numberOfNights">Number of Nights</label>
-                        <input type="number" id="numberOfNights" class="Options__Input" min="0" placeholder="0">
                     </div>
                 </div>
                 <div class="Options__FormActions">
@@ -90,7 +97,21 @@
                 </p>
             </div>
         </section>
+
+        <section class="Options__Section">
+            <h2 class="Options__SectionTitle" data-i18n="options.importExport.title">Import / Export</h2>
+            <p class="Options__SectionDescription" data-i18n="options.importExport.description">Export profiles to Excel
+                for bulk TM30 submission, or import from an existing template.</p>
+            <div class="Options__ImportExportActions">
+                <button type="button" id="export-excel-btn" class="Options__BtnPrimary"
+                    data-i18n="options.btn.exportExcel">Export to Excel</button>
+                <button type="button" id="import-excel-btn" class="Options__BtnSecondary"
+                    data-i18n="options.btn.importExcel">Import from Excel</button>
+                <input type="file" id="import-file-input" accept=".xls,.xlsx" style="display: none;">
+            </div>
+        </section>
     </div>
+    <script src="lib/xlsx.full.min.js"></script>
     <script src="locales/en.js"></script>
     <script src="locales/th.js"></script>
     <script src="i18n.js"></script>

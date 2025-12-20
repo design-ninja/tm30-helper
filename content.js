@@ -49,6 +49,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 async function fillTM30Form(person) {
     console.log('TM30 Helper: Starting instant fill for', person.firstName);
     const [d, m, y] = (person.birthDate || '').split('/');
+    const [ciD, ciM, ciY] = (person.checkInDate || '').split('/');
+    const [coD, coM, coY] = (person.checkOutDate || '').split('/');
 
     // 0. Select Address FIRST
     selectAddress();
@@ -61,7 +63,10 @@ async function fillTM30Form(person) {
         { name: 'Birth Month', val: m, selectors: ['input[formcontrolname="monthOfBirth"]'] },
         { name: 'Birth Year', val: y, selectors: ['input[formcontrolname="yearOfBirth"]'] },
         { name: 'Phone No.', val: person.phoneNo, selectors: ['input[formcontrolname="phoneNo"]'] },
-        { name: 'Number of Nights', val: person.nights, selectors: ['input[formcontrolname="nightOfStay"]'] }
+        { name: 'Check-in Day', val: ciD, selectors: ['input[formcontrolname="dayOfCheckIn"]'] },
+        { name: 'Check-in Month', val: ciM, selectors: ['input[formcontrolname="monthOfCheckIn"]'] },
+        { name: 'Check-in Year', val: ciY, selectors: ['input[formcontrolname="yearOfCheckIn"]'] },
+        { name: 'Check-out Date', val: person.checkOutDate, selectors: ['[sit-element-group="datepicker-check-out"] input', 'input[formcontrolname="checkOutDate"]'] }
     ];
 
     // 1. Fill all standard fields at once
@@ -69,6 +74,9 @@ async function fillTM30Form(person) {
         const el = findElement(field.selectors);
         if (el) {
             setStandardValue(el, field.val);
+            console.log(`TM30 Helper: ✓ Filled "${field.name}" with "${field.val}"`);
+        } else if (field.val) {
+            console.warn(`TM30 Helper: ✗ Field "${field.name}" NOT FOUND. Tried selectors:`, field.selectors);
         }
     }
 
