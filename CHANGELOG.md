@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2025-12-20
+
+### Added
+- Excel export with immigration template format
+- Excel import from existing templates
+- Check-in Date field in profiles
+- Check-out Date field in profiles
+- Auto-fill support for Check-in Date on TM30 form
+
+### Technical
+- SheetJS (xlsx) library for Excel file handling
+- Multi-sheet Excel export matching official template
+
 ## [1.1.0] - 2025-12-19
 
 ### Added

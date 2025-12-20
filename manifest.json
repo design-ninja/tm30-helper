@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Thai TM-30 Helper",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Auto-filler for Thai TM30 Notification of Residence for Foreigners form",
   "permissions": [
     "storage",

@@ -8,6 +8,7 @@
 
 - **Profile Management:** Store multiple family members or recurring guests for quick access.
 - **Instant Auto-fill:** Single-click injection into the official TM30 web forms.
+- **Excel Import/Export:** Export profiles to Excel for bulk TM30 submission via immigration's import feature.
 - **Smart Mapping:** Automatically handles complex fields like Nationalities, Gender, and Dates.
 - **Modern UI:** Clean, intuitive interface with a prioritized workflow.
 - **🇹🇭 Thai language support.**
@@ -26,7 +27,7 @@
 
 Click on the extension icon and select **Manage Profiles** (or go to the extension options). Add the details for the travelers you frequently report.
 
-### 2. Fill Out the TM30 Form
+### 2. Fill Out the TM30 Form (Single Person)
 
 1. Navigate to the [TM30 Search Page](https://tm30.immigration.go.th/tm30/#/external/ifa/search).
 2. Click the **+ Add** button to open a new TM30 application form.
@@ -35,7 +36,15 @@ Click on the extension icon and select **Manage Profiles** (or go to the extensi
 5. The form will be auto-filled with the selected profile data.
 6. **Important:** Carefully review all auto-filled data, complete any remaining fields manually, and click **Save**.
 
-### 3. Verify Your Submission
+### 3. Bulk TM30 Submission (Multiple Persons)
+
+1. Go to the extension options page (**Manage Profiles**).
+2. Scroll down to the **Import / Export** section.
+3. Click **Export to Excel** to download an Excel file with all your profiles.
+4. On the TM30 website, use the **Import Excel** feature to upload the file.
+5. All persons will be submitted at once.
+
+### 4. Verify Your Submission
 
 1. Return to the [TM30 Search Page](https://tm30.immigration.go.th/tm30/#/external/ifa/search).
 2. Click the **Search** button.

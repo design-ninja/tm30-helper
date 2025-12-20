@@ -504,3 +504,26 @@ body.Options {
     font-size: 0.9rem;
     text-align: center;
 }
+
+/* ============================================
+   IMPORT/EXPORT SECTION STYLES
+   ============================================ */
+
+.Options__SectionDescription {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.Options__ImportExportActions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.Options__ImportExportActions .Options__BtnPrimary,
+.Options__ImportExportActions .Options__BtnSecondary {
+    flex: 1;
+    min-width: 140px;
+}
+
