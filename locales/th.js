@@ -33,6 +33,7 @@ const LOCALE_TH = {
     "options.alert.importSuccess": "นำเข้า {count} โปรไฟล์สำเร็จ",
     "options.alert.exportSuccess": "ส่งออกไฟล์ Excel สำเร็จ",
     "options.alert.importError": "เกิดข้อผิดพลาดในการนำเข้าไฟล์ กรุณาตรวจสอบรูปแบบ",
+    "options.alert.emptySheet": "ชีตแรกไม่มีข้อมูล กรุณาเพิ่มข้อมูลในชีตแรกก่อนนำเข้า",
     "options.confirm.delete": "คุณแน่ใจหรือไม่ว่าต้องการลบโปรไฟล์นี้?",
     "options.importExport.title": "นำเข้า / ส่งออก",
     "options.importExport.description": "ส่งออกโปรไฟล์เป็น Excel สำหรับยื่น TM30 แบบกลุ่ม หรือนำเข้าจากแม่แบบที่มีอยู่",

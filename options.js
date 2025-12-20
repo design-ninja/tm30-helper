@@ -416,25 +416,68 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             console.log('TM30 Helper: Sheets found:', wb.SheetNames);
             
-            // Try first sheet, then second if first is empty
-            let dataRows = [];
-            for (const sheetName of wb.SheetNames) {
-                const ws = wb.Sheets[sheetName];
-                const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
-                
-                console.log(`TM30 Helper: Sheet "${sheetName}" has ${rows.length} rows`);
-                
-                // Skip header row and filter rows with data in first column
-                const filtered = rows.slice(1).filter(row => row[0] && row[0].toString().trim());
-                
-                if (filtered.length > 0) {
-                    console.log(`TM30 Helper: Found ${filtered.length} data rows in "${sheetName}"`);
-                    dataRows = filtered;
-                    break;
-                }
-            }
+            // Read only first sheet
+            const sheetName = wb.SheetNames[0];
+            const ws = wb.Sheets[sheetName];
+            const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+            
+            console.log(`TM30 Helper: Sheet "${sheetName}" has ${rows.length} rows`);
+            
+            // Skip header row and filter rows with data in first column
+            const dataRows = rows.slice(1).filter(row => row[0] && row[0].toString().trim());
             
             console.log('TM30 Helper: Data rows to import:', dataRows.length);
+            
+            // Alert if first sheet is empty
+            if (dataRows.length === 0) {
+                alert(I18n.t('options.alert.emptySheet'));
+                importFileInput.value = '';
+                return;
+            }
+            
+            // Helper to parse Excel dates (serial numbers or string formats)
+            const parseExcelDate = (value) => {
+                if (!value) return '';
+                
+                // If it's a number (Excel serial date)
+                if (typeof value === 'number') {
+                    // Excel date: days since 1900-01-01 (with Excel's leap year bug)
+                    const date = new Date((value - 25569) * 86400 * 1000);
+                    const day = String(date.getUTCDate()).padStart(2, '0');
+                    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+                    const year = date.getUTCFullYear();
+                    return `${day}/${month}/${year}`;
+                }
+                
+                // If it's a string, try to parse various formats
+                const str = value.toString().trim();
+                
+                // Already in DD/MM/YYYY format
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) {
+                    return str;
+                }
+                
+                // Short format: D/M/YY or DD/M/YY or D/MM/YY
+                const shortMatch = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2})$/);
+                if (shortMatch) {
+                    const day = shortMatch[1].padStart(2, '0');
+                    const month = shortMatch[2].padStart(2, '0');
+                    let year = parseInt(shortMatch[3]);
+                    // Convert 2-digit year: 00-29 = 2000s, 30-99 = 1900s
+                    year = year < 30 ? 2000 + year : 1900 + year;
+                    return `${day}/${month}/${year}`;
+                }
+                
+                // Medium format: D/M/YYYY or DD/M/YYYY
+                const medMatch = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+                if (medMatch) {
+                    const day = medMatch[1].padStart(2, '0');
+                    const month = medMatch[2].padStart(2, '0');
+                    return `${day}/${month}/${medMatch[3]}`;
+                }
+                
+                return str;
+            };
             
             let importedCount = 0;
             for (const row of dataRows) {
@@ -443,8 +486,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const gender = (row[3] || '').toString().trim().toUpperCase();
                 const passportNo = (row[4] || '').toString().trim();
                 const nationalityCode = (row[5] || '').toString().trim().toUpperCase();
-                const birthDate = (row[6] || '').toString().trim();
-                const checkOutDate = (row[7] || '').toString().trim();
+                const birthDate = parseExcelDate(row[6]);
+                const checkOutDate = parseExcelDate(row[7]);
                 const phoneNo = (row[8] || '').toString().trim();
 
                 // Validate required fields

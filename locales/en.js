@@ -33,6 +33,7 @@ const LOCALE_EN = {
     "options.alert.importSuccess": "Successfully imported {count} profiles",
     "options.alert.exportSuccess": "Excel file exported successfully",
     "options.alert.importError": "Error importing file. Please check the format.",
+    "options.alert.emptySheet": "The first sheet is empty. Please add data to the first sheet before importing.",
     "options.confirm.delete": "Are you sure you want to delete this profile?",
     "options.importExport.title": "Import / Export",
     "options.importExport.description": "Export profiles to Excel for bulk TM30 submission, or import from an existing template.",
