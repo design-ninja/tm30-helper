@@ -14,11 +14,15 @@
         <div class="PinLock__Card">
             <div class="PinLock__Icon">🔒</div>
             <h3 class="PinLock__Title" data-i18n="pin.title">Enter PIN</h3>
-            <div class="PinDigits PinDigits_lock" id="pin-lock-digits">
-                <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" pattern="[0-9]">
-                <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" pattern="[0-9]">
-                <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" pattern="[0-9]">
-                <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+            <div class="PinDigits PinDigits_lock" id="pin-lock-digits" role="group" aria-label="PIN code input">
+                <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                    aria-label="PIN digit 1">
+                <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                    aria-label="PIN digit 2">
+                <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                    aria-label="PIN digit 3">
+                <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                    aria-label="PIN digit 4">
             </div>
             <p id="pin-error" class="PinLock__Error" style="display: none;" data-i18n="pin.error">Incorrect PIN</p>
             <p id="pin-attempts" class="PinLock__Attempts" style="display: none;"></p>
@@ -144,28 +148,28 @@
                 <div class="Options__PinSetupForm">
                     <div class="Options__PinInputGroup">
                         <label class="Options__Label" data-i18n="options.security.newPin">New PIN</label>
-                        <div class="PinDigits" id="new-pin-digits">
+                        <div class="PinDigits" id="new-pin-digits" role="group" aria-label="New PIN input">
                             <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
-                                pattern="[0-9]">
+                                aria-label="New PIN digit 1">
                             <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
-                                pattern="[0-9]">
+                                aria-label="New PIN digit 2">
                             <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
-                                pattern="[0-9]">
+                                aria-label="New PIN digit 3">
                             <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
-                                pattern="[0-9]">
+                                aria-label="New PIN digit 4">
                         </div>
                     </div>
                     <div class="Options__PinInputGroup">
                         <label class="Options__Label" data-i18n="options.security.confirmPin">Confirm PIN</label>
-                        <div class="PinDigits" id="confirm-pin-digits">
+                        <div class="PinDigits" id="confirm-pin-digits" role="group" aria-label="Confirm PIN input">
                             <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
-                                pattern="[0-9]">
+                                aria-label="Confirm PIN digit 1">
                             <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
-                                pattern="[0-9]">
+                                aria-label="Confirm PIN digit 2">
                             <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
-                                pattern="[0-9]">
+                                aria-label="Confirm PIN digit 3">
                             <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
-                                pattern="[0-9]">
+                                aria-label="Confirm PIN digit 4">
                         </div>
                     </div>
                     <button type="button" id="set-pin-btn" class="Options__BtnPrimary"

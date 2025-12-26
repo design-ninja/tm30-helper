@@ -11,11 +11,11 @@
     <div id="pin-lock" class="PinLock" style="display: none;">
         <div class="PinLock__Icon">🔒</div>
         <h3 class="PinLock__Title" data-i18n="pin.title">Enter PIN</h3>
-        <div class="PinDigits PinDigits_lock" id="pin-lock-digits">
-            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" pattern="[0-9]">
-            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" pattern="[0-9]">
-            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" pattern="[0-9]">
-            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+        <div class="PinDigits PinDigits_lock" id="pin-lock-digits" role="group" aria-label="PIN code input">
+            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" aria-label="PIN digit 1">
+            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" aria-label="PIN digit 2">
+            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" aria-label="PIN digit 3">
+            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" aria-label="PIN digit 4">
         </div>
         <p id="pin-error" class="PinLock__Error" style="display: none;" data-i18n="pin.error">Incorrect PIN</p>
         <p id="pin-attempts" class="PinLock__Attempts" style="display: none;"></p>

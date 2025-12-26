@@ -11,65 +11,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const personList = document.getElementById('person-list');
     const openOptions = document.getElementById('open-options');
 
-    // Helper function to get PIN value from digit inputs
-    function getPinFromDigits(container) {
-        const inputs = container.querySelectorAll('.PinDigits__Input');
-        return Array.from(inputs).map(i => i.value).join('');
-    }
-
-    // Helper function to clear digit inputs
-    function clearDigits(container) {
-        const inputs = container.querySelectorAll('.PinDigits__Input');
-        inputs.forEach(i => {
-            i.value = '';
-            i.classList.remove('PinDigits__Input_filled');
-        });
-    }
-
-    // Setup auto-focus between digit inputs with auto-submit
-    function setupLockDigitInputs(container, onComplete) {
-        const inputs = container.querySelectorAll('.PinDigits__Input');
-        inputs.forEach((input, index) => {
-            input.addEventListener('input', async (e) => {
-                const value = e.target.value.replace(/\D/g, '');
-                e.target.value = value.slice(0, 1);
-                
-                if (value && index < inputs.length - 1) {
-                    inputs[index + 1].focus();
-                }
-                
-                e.target.classList.toggle('PinDigits__Input_filled', !!value);
-                
-                // Auto-submit when all 4 digits entered
-                const pin = getPinFromDigits(container);
-                if (pin.length === 4) {
-                    await onComplete(pin);
-                }
-            });
-
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Backspace' && !e.target.value && index > 0) {
-                    inputs[index - 1].focus();
-                }
-            });
-
-            input.addEventListener('paste', (e) => {
-                e.preventDefault();
-                const paste = (e.clipboardData || window.clipboardData).getData('text');
-                const digits = paste.replace(/\D/g, '').slice(0, 4);
-                digits.split('').forEach((digit, i) => {
-                    if (inputs[i]) {
-                        inputs[i].value = digit;
-                        inputs[i].classList.add('PinDigits__Input_filled');
-                    }
-                });
-                if (digits.length === 4) {
-                    onComplete(digits);
-                }
-            });
-        });
-    }
-
     // Check if PIN is enabled and if session is valid
     const pinEnabled = await PinManager.isPinEnabled();
     const sessionValid = await PinManager.isSessionValid();
@@ -79,33 +20,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         pinLock.style.display = 'flex';
         mainContent.style.display = 'none';
         
-        // Setup digit inputs with auto-submit
-        setupLockDigitInputs(pinLockDigits, async (pin) => {
-            const isValid = await PinManager.verifyPin(pin);
-            
-            if (isValid) {
-                // Unlock
-                pinLock.style.display = 'none';
-                mainContent.style.display = 'block';
-                await loadProfiles();
-            } else {
-                // Wrong PIN
-                const attempts = await PinManager.incrementAttempts();
-                clearDigits(pinLockDigits);
-                pinError.style.display = 'block';
-                updateAttemptsDisplay(attempts);
+        // Setup digit inputs with auto-submit using shared PinUI
+        PinUI.setupDigitInputs(pinLockDigits, {
+            autoSubmit: true,
+            onComplete: async (pin) => {
+                const isValid = await PinManager.verifyPin(pin);
                 
-                // Shake animation
-                pinLockDigits.classList.add('PinLock__Input_shake');
-                setTimeout(() => pinLockDigits.classList.remove('PinLock__Input_shake'), 500);
-                
-                // Focus first input
-                pinLockDigits.querySelector('.PinDigits__Input').focus();
+                if (isValid) {
+                    // Unlock
+                    pinLock.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    await loadProfiles();
+                } else {
+                    // Wrong PIN
+                    const attempts = await PinManager.incrementAttempts();
+                    PinUI.clearDigits(pinLockDigits);
+                    pinError.style.display = 'block';
+                    updateAttemptsDisplay(attempts);
+                    
+                    // Shake animation
+                    PinUI.shake(pinLockDigits);
+                    
+                    // Focus first input
+                    PinUI.focusFirst(pinLockDigits);
+                }
             }
         });
         
         // Focus first input
-        pinLockDigits.querySelector('.PinDigits__Input').focus();
+        PinUI.focusFirst(pinLockDigits);
         
         // Update attempts display
         const attempts = await PinManager.getAttempts();
@@ -128,8 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         if (attempts >= PinManager.MAX_ATTEMPTS) {
             pinResetBtn.style.display = 'block';
-            const inputs = pinLockDigits.querySelectorAll('.PinDigits__Input');
-            inputs.forEach(i => i.disabled = true);
+            PinUI.disableInputs(pinLockDigits);
         }
     }
 
@@ -209,7 +151,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 chrome.tabs.sendMessage(tabs[0].id, { action: 'FILL_FORM', person }, (response) => {
                     if (chrome.runtime.lastError) {
                         alert(I18n.t('popup.error.refresh'));
-                        console.error(chrome.runtime.lastError);
                     }
                 });
             }

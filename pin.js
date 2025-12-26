@@ -4,15 +4,9 @@
 const PinManager = {
     MAX_ATTEMPTS: 3,
     DEFAULT_TIMEOUT: 300000, // 5 minutes in milliseconds
-    LOCK_TIMEOUT_OPTIONS: [
-        { value: 30000, label: '30s' },
-        { value: 60000, label: '1m' },
-        { value: 120000, label: '2m' },
-        { value: 180000, label: '3m' },
-        { value: 240000, label: '4m' },
-        { value: 300000, label: '5m' },
-        { value: 600000, label: '10m' }
-    ],
+    SESSION_CHECK_INTERVAL: 5000, // Check session every 5 seconds
+    SHAKE_ANIMATION_DURATION: 500, // Shake animation duration in ms
+    ACTIVITY_DEBOUNCE_DELAY: 1000, // Debounce delay for activity tracking
     
     // Hash PIN using SHA-256
     async hashPin(pin) {
@@ -37,7 +31,7 @@ const PinManager = {
     async getLockTimeout() {
         return new Promise(resolve => {
             chrome.storage.local.get(['pinLockTimeout'], (result) => {
-                resolve(result.pinLockTimeout || this.DEFAULT_TIMEOUT);
+                resolve(result.pinLockTimeout || PinManager.DEFAULT_TIMEOUT);
             });
         });
     },
@@ -139,5 +133,98 @@ const PinManager = {
     // Validate PIN format (exactly 4 digits)
     isValidFormat(pin) {
         return /^\d{4}$/.test(pin);
+    }
+};
+
+// PIN UI Helpers - shared functions for PIN digit inputs
+const PinUI = {
+    // Get PIN value from digit inputs container
+    getPinFromDigits(container) {
+        const inputs = container.querySelectorAll('.PinDigits__Input');
+        return Array.from(inputs).map(i => i.value).join('');
+    },
+
+    // Clear all digit inputs in container
+    clearDigits(container) {
+        const inputs = container.querySelectorAll('.PinDigits__Input');
+        inputs.forEach(i => {
+            i.value = '';
+            i.classList.remove('PinDigits__Input_filled');
+        });
+    },
+
+    // Setup digit inputs with auto-focus and optional auto-submit
+    setupDigitInputs(container, { onComplete, autoSubmit = false } = {}) {
+        const inputs = container.querySelectorAll('.PinDigits__Input');
+        
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', async (e) => {
+                const value = e.target.value.replace(/\D/g, '');
+                e.target.value = value.slice(0, 1);
+                
+                if (value && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                } else if (value && index === inputs.length - 1 && onComplete && !autoSubmit) {
+                    onComplete();
+                }
+                
+                e.target.classList.toggle('PinDigits__Input_filled', !!value);
+                
+                // Auto-submit when all 4 digits entered
+                if (autoSubmit) {
+                    const pin = PinUI.getPinFromDigits(container);
+                    if (pin.length === 4 && onComplete) {
+                        await onComplete(pin);
+                    }
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const digits = paste.replace(/\D/g, '').slice(0, 4);
+                digits.split('').forEach((digit, i) => {
+                    if (inputs[i]) {
+                        inputs[i].value = digit;
+                        inputs[i].classList.add('PinDigits__Input_filled');
+                    }
+                });
+                if (digits.length === 4 && onComplete) {
+                    if (autoSubmit) {
+                        onComplete(digits);
+                    } else {
+                        onComplete();
+                    }
+                } else if (digits.length > 0 && !autoSubmit) {
+                    inputs[Math.min(digits.length, inputs.length - 1)].focus();
+                }
+            });
+        });
+    },
+
+    // Focus first input in container
+    focusFirst(container) {
+        const input = container.querySelector('.PinDigits__Input');
+        if (input) input.focus();
+    },
+
+    // Disable all inputs in container
+    disableInputs(container) {
+        const inputs = container.querySelectorAll('.PinDigits__Input');
+        inputs.forEach(i => i.disabled = true);
+    },
+
+    // Apply shake animation to container
+    shake(container) {
+        container.classList.add('PinLock__Input_shake');
+        setTimeout(() => {
+            container.classList.remove('PinLock__Input_shake');
+        }, PinManager.SHAKE_ANIMATION_DURATION);
     }
 };
