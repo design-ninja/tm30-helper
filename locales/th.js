@@ -76,5 +76,14 @@ const LOCALE_TH = {
     "options.security.lockTimeout": "ล็อคหลังไม่ใช้งาน",
     "options.security.badgeEnabled": "เปิดใช้งาน",
     "options.security.badgeNotSet": "ยังไม่ตั้ง",
-    "options.security.status": "สถานะ"
+    "options.security.status": "สถานะ",
+    "options.security.timeout.30s": "30 วินาที",
+    "options.security.timeout.1m": "1 นาที",
+    "options.security.timeout.2m": "2 นาที",
+    "options.security.timeout.3m": "3 นาที",
+    "options.security.timeout.4m": "4 นาที",
+    "options.security.timeout.5m": "5 นาที",
+    "options.security.timeout.10m": "10 นาที",
+    "options.madeBy": "สร้างโดย",
+    "options.withLove": "ด้วย"
 };

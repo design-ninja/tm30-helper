@@ -251,6 +251,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         await PinManager.setLockTimeout(timeout);
     });
 
+    // Language selector
+    const languageSelector = document.getElementById('language-selector');
+    if (languageSelector) {
+        languageSelector.value = I18n.currentLanguage;
+        languageSelector.addEventListener('change', async (e) => {
+            await I18n.setLanguage(e.target.value);
+        });
+    }
+
     // Reset button handler
     pinResetBtn.addEventListener('click', async () => {
         if (confirm(I18n.t('pin.resetConfirm'))) {

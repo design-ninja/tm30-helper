@@ -43,7 +43,7 @@ const LOCALE_EN = {
     "popup.header": "Thai TM30 Helper",
     "popup.settings": "Settings",
     "popup.addProfiles": "Add Profiles",
-    "popup.emptyState": "No saved profiles found.",
+    "popup.emptyState": "No saved profiles found",
     "popup.editProfile": "Edit Profile",
     "popup.error.refresh": "Error: Please refresh the TM30 form page to enable the extension.",
 
@@ -76,5 +76,14 @@ const LOCALE_EN = {
     "options.security.lockTimeout": "Lock after inactivity",
     "options.security.badgeEnabled": "Enabled",
     "options.security.badgeNotSet": "Not set",
-    "options.security.status": "Status"
+    "options.security.status": "Status",
+    "options.security.timeout.30s": "30 seconds",
+    "options.security.timeout.1m": "1 minute",
+    "options.security.timeout.2m": "2 minutes",
+    "options.security.timeout.3m": "3 minutes",
+    "options.security.timeout.4m": "4 minutes",
+    "options.security.timeout.5m": "5 minutes",
+    "options.security.timeout.10m": "10 minutes",
+    "options.madeBy": "Made by",
+    "options.withLove": "with"
 };

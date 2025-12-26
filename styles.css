@@ -97,47 +97,6 @@ body.Popup {
     height: 24px;
 }
 
-.Popup__LangToggle {
-    display: flex;
-    margin-left: auto;
-    gap: 0;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    overflow: hidden;
-}
-
-.Popup__LangBtn {
-    padding: 4px 8px;
-    min-width: 28px;
-    border: none;
-    background: var(--card-bg);
-    color: var(--text-light);
-    font-size: 0.7rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-}
-
-.Popup__LangBtn:not(:last-child) {
-    border-right: 1px solid var(--border);
-}
-
-.Popup__LangBtn:hover {
-    background: var(--primary-light);
-    color: var(--primary);
-}
-
-.Popup__LangBtn_active {
-    background: var(--primary);
-    color: white;
-}
-
-.Popup__LangBtn_active:hover {
-    background: var(--primary);
-    color: white;
-}
-
 .Popup__PersonItem {
     padding: 12px;
     border: 1px solid var(--border);
@@ -257,16 +216,23 @@ body.Options {
     font-size: 1.1rem;
 }
 
-.Options__LanguageSelector {
+.Options__Footer {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
+    justify-content: space-between;
     margin-top: 16px;
+    padding: 0 4px;
 }
 
-.Options__LanguageLabel {
+.Options__FooterLeft {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.Options__FooterLabel {
     font-size: 0.875rem;
+    font-weight: 500;
     color: var(--text-light);
 }
 
@@ -286,6 +252,21 @@ body.Options {
 .Options__LanguageSelect:focus {
     outline: none;
     border-color: var(--primary);
+}
+
+.Options__FooterRight {
+    font-size: 0.875rem;
+    color: var(--text-light);
+}
+
+.Options__FooterLink {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.Options__FooterLink:hover {
+    text-decoration: underline;
 }
 
 .Options__Section {

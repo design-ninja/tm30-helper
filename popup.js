@@ -10,8 +10,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const pinResetBtn = document.getElementById('pin-reset-btn');
     const personList = document.getElementById('person-list');
     const openOptions = document.getElementById('open-options');
-    const langEnBtn = document.getElementById('lang-en');
-    const langThBtn = document.getElementById('lang-th');
 
     // Helper function to get PIN value from digit inputs
     function getPinFromDigits(container) {
@@ -203,26 +201,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
     }
-
-    // Update language toggle active state
-    const updateLangToggle = () => {
-        langEnBtn.classList.toggle('Popup__LangBtn_active', I18n.currentLanguage === 'en');
-        langThBtn.classList.toggle('Popup__LangBtn_active', I18n.currentLanguage === 'th');
-    };
-    updateLangToggle();
-
-    // Language toggle handlers
-    langEnBtn.addEventListener('click', async () => {
-        await I18n.setLanguage('en');
-        updateLangToggle();
-        location.reload();
-    });
-
-    langThBtn.addEventListener('click', async () => {
-        await I18n.setLanguage('th');
-        updateLangToggle();
-        location.reload();
-    });
 
     // Send message to content script to fill the form
     const fillForm = (person) => {
