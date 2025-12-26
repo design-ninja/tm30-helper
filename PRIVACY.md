@@ -1,6 +1,6 @@
 # Privacy Policy for Thai TM30 Helper
 
-**Last updated:** December 19, 2025
+**Last updated:** December 26, 2025
 
 ## Overview
 
@@ -31,6 +31,13 @@ The extension requires the following permissions:
 ## Data Security
 
 Your data is stored locally in your browser's encrypted storage. Only you have access to this data. Uninstalling the extension will remove all stored data.
+
+### PIN Protection
+
+The optional PIN feature provides an additional layer of security:
+- PINs are stored as SHA-256 hashes, never in plain text
+- Brute-force protection limits incorrect attempts
+- Session timeout automatically locks access after inactivity
 
 ## Changes to This Policy
 

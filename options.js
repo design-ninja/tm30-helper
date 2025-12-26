@@ -2,6 +2,260 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize i18n
     await I18n.init();
 
+    // PIN Lock Elements
+    const pinLock = document.getElementById('pin-lock');
+    const mainContent = document.getElementById('main-content');
+    const pinError = document.getElementById('pin-error');
+    const pinAttempts = document.getElementById('pin-attempts');
+    const pinResetBtn = document.getElementById('pin-reset-btn');
+
+    // Security Settings Elements
+    const pinSetup = document.getElementById('pin-setup');
+    const pinManage = document.getElementById('pin-manage');
+    const newPinDigits = document.getElementById('new-pin-digits');
+    const confirmPinDigits = document.getElementById('confirm-pin-digits');
+    const setPinBtn = document.getElementById('set-pin-btn');
+    const changePinBtn = document.getElementById('change-pin-btn');
+    const removePinBtn = document.getElementById('remove-pin-btn');
+
+    // Initialize digit inputs - new PIN focuses to confirm PIN when complete
+    if (newPinDigits) {
+        PinUI.setupDigitInputs(newPinDigits, {
+            onComplete: () => {
+                if (confirmPinDigits) {
+                    PinUI.focusFirst(confirmPinDigits);
+                }
+            }
+        });
+    }
+    if (confirmPinDigits) {
+        PinUI.setupDigitInputs(confirmPinDigits);
+    }
+
+    // Check if PIN is enabled and show lock screen or main content
+    const pinEnabled = await PinManager.isPinEnabled();
+    const sessionValid = await PinManager.isSessionValid();
+    const pinLockDigits = document.getElementById('pin-lock-digits');
+    
+    // Setup digit inputs with auto-submit using shared PinUI
+    // This must be done before showing lock screen so handlers are always attached
+    if (pinLockDigits) {
+        PinUI.setupDigitInputs(pinLockDigits, {
+            autoSubmit: true,
+            onComplete: async (pin) => {
+                const isValid = await PinManager.verifyPin(pin);
+                
+                if (isValid) {
+                    pinLock.style.display = 'none';
+                    mainContent.style.display = 'block';
+                } else {
+                    const attempts = await PinManager.incrementAttempts();
+                    PinUI.clearDigits(pinLockDigits);
+                    pinError.style.display = 'block';
+                    updateAttemptsDisplay(attempts);
+                    
+                    PinUI.shake(pinLockDigits);
+                    PinUI.focusFirst(pinLockDigits);
+                }
+            }
+        });
+    }
+    
+    if (pinEnabled && !sessionValid) {
+        pinLock.style.display = 'flex';
+        mainContent.style.display = 'none';
+        
+        // Focus first input
+        PinUI.focusFirst(pinLockDigits);
+        
+        const attempts = await PinManager.getAttempts();
+        updateAttemptsDisplay(attempts);
+    } else {
+        pinLock.style.display = 'none';
+        mainContent.style.display = 'block';
+    }
+
+    // Activity-based session management with debounce
+    if (pinEnabled) {
+        let sessionCheckInterval;
+        let activityDebounceTimeout;
+        
+        // Extend session on user activity (debounced to avoid excessive storage calls)
+        const extendSession = () => {
+            if (activityDebounceTimeout) return;
+            activityDebounceTimeout = setTimeout(() => {
+                if (mainContent.style.display !== 'none') {
+                    PinManager.startSession();
+                }
+                activityDebounceTimeout = null;
+            }, PinManager.ACTIVITY_DEBOUNCE_DELAY);
+        };
+        
+        // Listen for user activity events
+        ['click', 'keydown', 'input', 'scroll', 'mousemove'].forEach(event => {
+            document.addEventListener(event, extendSession, { passive: true });
+        });
+        
+        // Periodically check if session expired (when user is idle)
+        sessionCheckInterval = setInterval(async () => {
+            const stillValid = await PinManager.isSessionValid();
+            if (!stillValid && mainContent.style.display !== 'none') {
+                // Session expired after inactivity, show lock screen
+                pinLock.style.display = 'flex';
+                mainContent.style.display = 'none';
+                PinUI.clearDigits(pinLockDigits);
+                pinError.style.display = 'none';
+                PinUI.focusFirst(pinLockDigits);
+            }
+        }, PinManager.SESSION_CHECK_INTERVAL);
+        
+        // Cleanup on page unload to prevent memory leaks
+        window.addEventListener('beforeunload', () => {
+            if (sessionCheckInterval) {
+                clearInterval(sessionCheckInterval);
+            }
+            if (activityDebounceTimeout) {
+                clearTimeout(activityDebounceTimeout);
+            }
+        });
+    }
+
+    function updateAttemptsDisplay(attempts) {
+        const remaining = PinManager.MAX_ATTEMPTS - attempts;
+        
+        if (attempts > 0 && remaining > 0) {
+            pinAttempts.textContent = I18n.t('pin.attemptsLeft').replace('{count}', remaining);
+            pinAttempts.style.display = 'block';
+        }
+        
+        if (attempts >= PinManager.MAX_ATTEMPTS) {
+            pinResetBtn.style.display = 'block';
+            PinUI.disableInputs(pinLockDigits);
+        }
+    }
+
+    // Lock timeout select
+    const lockTimeoutSelect = document.getElementById('lock-timeout-select');
+
+    // Update security settings UI
+    const pinStatusBadge = document.getElementById('pin-status-badge');
+    
+    async function updateSecurityUI() {
+        const enabled = await PinManager.isPinEnabled();
+        if (enabled) {
+            pinSetup.style.display = 'none';
+            pinManage.style.display = 'block';
+            
+            // Update badge
+            pinStatusBadge.className = 'Options__Badge Options__Badge_enabled';
+            pinStatusBadge.textContent = I18n.t('options.security.badgeEnabled');
+            
+            // Load current timeout value
+            const currentTimeout = await PinManager.getLockTimeout();
+            lockTimeoutSelect.value = currentTimeout.toString();
+        } else {
+            pinSetup.style.display = 'block';
+            pinManage.style.display = 'none';
+            
+            // Update badge
+            pinStatusBadge.className = 'Options__Badge Options__Badge_disabled';
+            pinStatusBadge.textContent = I18n.t('options.security.badgeNotSet');
+        }
+    }
+    updateSecurityUI();
+
+    // Lock timeout change handler
+    lockTimeoutSelect.addEventListener('change', async (e) => {
+        const timeout = parseInt(e.target.value, 10);
+        await PinManager.setLockTimeout(timeout);
+    });
+
+    // Language selector
+    const languageSelector = document.getElementById('language-selector');
+    if (languageSelector) {
+        languageSelector.value = I18n.currentLanguage;
+        languageSelector.addEventListener('change', async (e) => {
+            await I18n.setLanguage(e.target.value);
+        });
+    }
+
+    // Reset button handler
+    pinResetBtn.addEventListener('click', async () => {
+        if (confirm(I18n.t('pin.resetConfirm'))) {
+            await PinManager.resetAll();
+            alert(I18n.t('pin.resetSuccess'));
+            pinLock.style.display = 'none';
+            mainContent.style.display = 'block';
+            updateSecurityUI();
+            loadPersons();
+        }
+    });
+
+    // Set PIN button handler
+    setPinBtn.addEventListener('click', async () => {
+        const newPin = PinUI.getPinFromDigits(newPinDigits);
+        const confirmPin = PinUI.getPinFromDigits(confirmPinDigits);
+
+        if (!PinManager.isValidFormat(newPin)) {
+            alert(I18n.t('options.security.pinInvalid'));
+            return;
+        }
+
+        if (newPin !== confirmPin) {
+            alert(I18n.t('options.security.pinMismatch'));
+            return;
+        }
+
+        await PinManager.setPin(newPin);
+        alert(I18n.t('options.security.pinSet'));
+        PinUI.clearDigits(newPinDigits);
+        PinUI.clearDigits(confirmPinDigits);
+        updateSecurityUI();
+    });
+
+    // Change PIN button handler
+    changePinBtn.addEventListener('click', async () => {
+        const currentPin = prompt(I18n.t('options.security.currentPin'));
+        if (!currentPin) return;
+
+        const isValid = await PinManager.verifyPin(currentPin);
+        if (!isValid) {
+            alert(I18n.t('options.security.wrongPin'));
+            return;
+        }
+
+        const newPin = prompt(I18n.t('options.security.newPin'));
+        if (!newPin || !PinManager.isValidFormat(newPin)) {
+            alert(I18n.t('options.security.pinInvalid'));
+            return;
+        }
+
+        const confirmPin = prompt(I18n.t('options.security.confirmPin'));
+        if (newPin !== confirmPin) {
+            alert(I18n.t('options.security.pinMismatch'));
+            return;
+        }
+
+        await PinManager.setPin(newPin);
+        alert(I18n.t('options.security.pinChanged'));
+    });
+
+    // Remove PIN button handler
+    removePinBtn.addEventListener('click', async () => {
+        const currentPin = prompt(I18n.t('options.security.currentPin'));
+        if (!currentPin) return;
+
+        const isValid = await PinManager.verifyPin(currentPin);
+        if (!isValid) {
+            alert(I18n.t('options.security.wrongPin'));
+            return;
+        }
+
+        await PinManager.removePin();
+        alert(I18n.t('options.security.pinRemoved'));
+        updateSecurityUI();
+    });
+
     const form = document.getElementById('person-form');
     const personList = document.getElementById('person-list');
     const personIdInput = document.getElementById('personId');
@@ -420,19 +674,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await file.arrayBuffer();
             const wb = XLSX.read(data);
             
-            console.log('TM30 Helper: Sheets found:', wb.SheetNames);
-            
             // Read only first sheet
             const sheetName = wb.SheetNames[0];
             const ws = wb.Sheets[sheetName];
             const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
             
-            console.log(`TM30 Helper: Sheet "${sheetName}" has ${rows.length} rows`);
-            
             // Skip header row and filter rows with data in first column
             const dataRows = rows.slice(1).filter(row => row[0] && row[0].toString().trim());
-            
-            console.log('TM30 Helper: Data rows to import:', dataRows.length);
             
             // Alert if first sheet is empty
             if (dataRows.length === 0) {

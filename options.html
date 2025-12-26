@@ -9,7 +9,30 @@
 </head>
 
 <body class="Options">
-    <div class="Options__Container">
+    <!-- PIN Lock Screen -->
+    <div id="pin-lock" class="PinLock PinLock_fullscreen" style="display: none;">
+        <div class="PinLock__Card">
+            <div class="PinLock__Icon">🔒</div>
+            <h3 class="PinLock__Title" data-i18n="pin.title">Enter PIN</h3>
+            <div class="PinDigits PinDigits_lock" id="pin-lock-digits" role="group" aria-label="PIN code input">
+                <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                    aria-label="PIN digit 1">
+                <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                    aria-label="PIN digit 2">
+                <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                    aria-label="PIN digit 3">
+                <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                    aria-label="PIN digit 4">
+            </div>
+            <p id="pin-error" class="PinLock__Error" style="display: none;" data-i18n="pin.error">Incorrect PIN</p>
+            <p id="pin-attempts" class="PinLock__Attempts" style="display: none;"></p>
+            <button id="pin-reset-btn" class="PinLock__ResetBtn" style="display: none;" data-i18n="pin.forgot">Forgot
+                PIN? Reset all data</button>
+        </div>
+    </div>
+
+    <!-- Main Content (hidden until PIN check completes) -->
+    <div id="main-content" class="Options__Container" style="display: none;">
         <header class="Options__Header">
             <img src="icons/icon128.png" alt="Icon" class="Options__HeaderIcon">
             <h1 class="Options__Title" data-i18n="options.header">Thai TM30 Helper</h1>
@@ -18,7 +41,7 @@
         </header>
 
         <section class="Options__Section">
-            <h2 id="form-title" class="Options__SectionTitle" data-i18n="options.formTitle.add">Add New Person</h2>
+            <h2 id="form-title" class="Options__SectionTitle" data-i18n="options.formTitle.add">👤 Add New Person</h2>
             <form id="person-form">
                 <input type="hidden" id="personId">
                 <div class="Options__FormGrid">
@@ -90,7 +113,7 @@
         </section>
 
         <section class="Options__Section">
-            <h2 class="Options__SectionTitle" data-i18n="options.savedProfiles">Saved Profiles</h2>
+            <h2 class="Options__SectionTitle" data-i18n="options.savedProfiles">👥 Saved Profiles</h2>
             <div id="person-list" class="Options__PersonList">
                 <!-- Persons will be injected here -->
                 <p class="EmptyState" data-i18n="options.emptyState">No profiles saved yet. Add your first person above.
@@ -99,7 +122,7 @@
         </section>
 
         <section class="Options__Section">
-            <h2 class="Options__SectionTitle" data-i18n="options.importExport.title">Import / Export</h2>
+            <h2 class="Options__SectionTitle" data-i18n="options.importExport.title">🔄 Import / Export</h2>
             <p class="Options__SectionDescription" data-i18n="options.importExport.description">Export profiles to Excel
                 for bulk TM30 submission, or import from an existing template.</p>
             <div class="Options__ImportExportActions">
@@ -110,6 +133,87 @@
                 <input type="file" id="import-file-input" accept=".xls,.xlsx" style="display: none;">
             </div>
         </section>
+
+        <section class="Options__Section">
+            <div class="Options__SectionHeader">
+                <h2 class="Options__SectionTitle" data-i18n="options.security.title">🔐 PIN code</h2>
+                <span id="pin-status-badge" class="Options__Badge Options__Badge_disabled"
+                    data-i18n="options.security.badgeNotSet">Not set</span>
+            </div>
+            <p class="Options__SectionDescription" data-i18n="options.security.description">Protect your data with a PIN
+                code</p>
+
+            <!-- PIN Setup (when PIN is not set) -->
+            <div id="pin-setup" class="Options__SecurityBlock">
+                <div class="Options__PinSetupForm">
+                    <div class="Options__PinInputGroup">
+                        <label class="Options__Label" data-i18n="options.security.newPin">New PIN</label>
+                        <div class="PinDigits" id="new-pin-digits" role="group" aria-label="New PIN input">
+                            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                                aria-label="New PIN digit 1">
+                            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                                aria-label="New PIN digit 2">
+                            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                                aria-label="New PIN digit 3">
+                            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                                aria-label="New PIN digit 4">
+                        </div>
+                    </div>
+                    <div class="Options__PinInputGroup">
+                        <label class="Options__Label" data-i18n="options.security.confirmPin">Confirm PIN</label>
+                        <div class="PinDigits" id="confirm-pin-digits" role="group" aria-label="Confirm PIN input">
+                            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                                aria-label="Confirm PIN digit 1">
+                            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                                aria-label="Confirm PIN digit 2">
+                            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                                aria-label="Confirm PIN digit 3">
+                            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric"
+                                aria-label="Confirm PIN digit 4">
+                        </div>
+                    </div>
+                    <button type="button" id="set-pin-btn" class="Options__BtnPrimary"
+                        data-i18n="options.security.setPin">Set PIN</button>
+                </div>
+            </div>
+
+            <!-- PIN Manage (when PIN is set) -->
+            <div id="pin-manage" class="Options__SecurityBlock" style="display: none;">
+                <div class="Options__FormGroup">
+                    <label class="Options__Label" data-i18n="options.security.lockTimeout">Lock after inactivity</label>
+                    <select id="lock-timeout-select" class="Options__Select Options__Select_auto">
+                        <option value="30000" data-i18n="options.security.timeout.30s">30 seconds</option>
+                        <option value="60000" data-i18n="options.security.timeout.1m">1 minute</option>
+                        <option value="120000" data-i18n="options.security.timeout.2m">2 minutes</option>
+                        <option value="180000" data-i18n="options.security.timeout.3m">3 minutes</option>
+                        <option value="240000" data-i18n="options.security.timeout.4m">4 minutes</option>
+                        <option value="300000" data-i18n="options.security.timeout.5m" selected>5 minutes</option>
+                        <option value="600000" data-i18n="options.security.timeout.10m">10 minutes</option>
+                    </select>
+                </div>
+
+                <div class="Options__SecurityActions">
+                    <button type="button" id="change-pin-btn" class="Options__BtnSecondary"
+                        data-i18n="options.security.changePin">Change PIN</button>
+                    <button type="button" id="remove-pin-btn" class="Options__BtnDanger"
+                        data-i18n="options.security.removePin">Remove PIN</button>
+                </div>
+            </div>
+        </section>
+
+        <footer class="Options__Footer">
+            <div class="Options__FooterLeft">
+                <label class="Options__FooterLabel" data-i18n="options.language">Language</label>
+                <select id="language-selector" class="Options__LanguageSelect">
+                    <option value="en">English</option>
+                    <option value="th">ไทย</option>
+                </select>
+            </div>
+            <div class="Options__FooterRight">
+                <span data-i18n="options.madeBy">Made by</span> <a href="https://lirik.pro/en" target="_blank"
+                    class="Options__FooterLink">lirik</a> <span data-i18n="options.withLove">with</span> 🖤
+            </div>
+        </footer>
     </div>
     <script src="lib/xlsx.full.min.js"></script>
     <script src="locales/en.js"></script>
@@ -118,6 +222,7 @@
     <script src="storage.js"></script>
     <script src="nationalities.js"></script>
     <script src="mock-data.js"></script>
+    <script src="pin.js"></script>
     <script src="options.js"></script>
 </body>
 

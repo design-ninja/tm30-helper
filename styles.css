@@ -46,6 +46,24 @@ body {
     border-radius: var(--radius);
 }
 
+.EmptyState__Btn {
+    display: block;
+    margin: 16px auto 0;
+    padding: 10px 24px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.EmptyState__Btn:hover {
+    background: var(--primary-hover);
+}
+
 /* ============================================
    POPUP STYLES
    ============================================ */
@@ -77,47 +95,6 @@ body.Popup {
 .Popup__HeaderIcon {
     width: 24px;
     height: 24px;
-}
-
-.Popup__LangToggle {
-    display: flex;
-    margin-left: auto;
-    gap: 0;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    overflow: hidden;
-}
-
-.Popup__LangBtn {
-    padding: 4px 8px;
-    min-width: 28px;
-    border: none;
-    background: var(--card-bg);
-    color: var(--text-light);
-    font-size: 0.7rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-}
-
-.Popup__LangBtn:not(:last-child) {
-    border-right: 1px solid var(--border);
-}
-
-.Popup__LangBtn:hover {
-    background: var(--primary-light);
-    color: var(--primary);
-}
-
-.Popup__LangBtn_active {
-    background: var(--primary);
-    color: white;
-}
-
-.Popup__LangBtn_active:hover {
-    background: var(--primary);
-    color: white;
 }
 
 .Popup__PersonItem {
@@ -239,16 +216,23 @@ body.Options {
     font-size: 1.1rem;
 }
 
-.Options__LanguageSelector {
+.Options__Footer {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
+    justify-content: space-between;
     margin-top: 16px;
+    padding: 0 4px;
 }
 
-.Options__LanguageLabel {
+.Options__FooterLeft {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.Options__FooterLabel {
     font-size: 0.875rem;
+    font-weight: 500;
     color: var(--text-light);
 }
 
@@ -270,6 +254,21 @@ body.Options {
     border-color: var(--primary);
 }
 
+.Options__FooterRight {
+    font-size: 0.875rem;
+    color: var(--text-light);
+}
+
+.Options__FooterLink {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.Options__FooterLink:hover {
+    text-decoration: underline;
+}
+
 .Options__Section {
     background: var(--card-bg);
     border-radius: var(--radius-lg);
@@ -283,6 +282,40 @@ body.Options {
     font-weight: 600;
     margin-bottom: 24px;
     padding-bottom: 0;
+}
+
+.Options__SectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.Options__SectionHeader .Options__SectionTitle {
+    margin-bottom: 0;
+}
+
+.Options__SectionHeader + .Options__SectionDescription {
+    margin-top: 16px;
+}
+
+.Options__Badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.Options__Badge_enabled {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.Options__Badge_disabled {
+    background: var(--border);
+    color: var(--text-light);
 }
 
 .Options__FormGrid {
@@ -300,6 +333,19 @@ body.Options {
 
 .Options__FormGroup_fullWidth {
     grid-column: span 2;
+}
+
+.Options__FormGroup_inline {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.Options__Select_short {
+    width: auto;
+    min-width: 140px;
+    max-width: 358px;
 }
 
 .Options__Label {
@@ -521,9 +567,236 @@ body.Options {
     flex-wrap: wrap;
 }
 
-.Options__ImportExportActions .Options__BtnPrimary,
-.Options__ImportExportActions .Options__BtnSecondary {
-    flex: 1;
-    min-width: 140px;
+/* ============================================
+   SECURITY SETTINGS TABLE STYLES
+   ============================================ */
+
+.Options__SettingsTable {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
 }
 
+.Options__SettingsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.Options__SettingsRow:last-child {
+    border-bottom: none;
+}
+
+.Options__SettingsLabel {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.Options__SettingsValue {
+    font-size: 0.95rem;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.Options__SettingsValue_success {
+    color: var(--success);
+}
+
+.Options__SettingsValue_disabled {
+    color: var(--text-light);
+}
+
+.Options__PinSetupForm {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.Options__PinSetupForm .Options__BtnPrimary {
+    align-self: flex-start;
+    margin-top: 8px;
+}
+
+.Options__Select_compact {
+    width: auto;
+    padding: 8px 32px 8px 12px;
+    font-size: 0.9rem;
+}
+
+select.Options__Select_auto {
+    width: auto;
+    min-width: 200px;
+    align-self: flex-start;
+}
+
+/* ============================================
+   PIN LOCK SCREEN STYLES
+   ============================================ */
+
+.PinLock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    text-align: center;
+}
+
+.PinLock_fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg);
+    z-index: 9999;
+}
+
+.PinLock__Card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: var(--shadow);
+    max-width: 360px;
+    width: 100%;
+}
+
+.PinLock__Icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.PinLock__Title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--heading);
+    margin-bottom: 24px;
+}
+
+.PinLock__Input_shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+}
+
+.PinLock__Error {
+    color: var(--danger);
+    font-size: 0.9rem;
+    margin-top: 12px;
+    font-weight: 500;
+}
+
+.PinLock__Attempts {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin-top: 8px;
+}
+
+.PinLock__ResetBtn {
+    margin-top: 24px;
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.PinLock__ResetBtn:hover {
+    background: var(--danger-bg);
+}
+
+/* ============================================
+   SECURITY SETTINGS STYLES
+   ============================================ */
+
+.Options__SecurityBlock {
+    margin-top: 16px;
+}
+
+.Options__SecurityStatus {
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+}
+
+.Options__SecurityStatus_enabled {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.Options__SecurityStatus_disabled {
+    background: var(--border);
+    color: var(--text-light);
+}
+
+.Options__SecurityActions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.Options__BtnDanger {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: none;
+    padding: 13px 32px;
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.Options__BtnDanger:hover {
+    background: var(--danger-bg-hover);
+}
+
+/* PIN Digit Inputs */
+.Options__PinInputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.PinDigits {
+    display: flex;
+    gap: 8px;
+}
+
+.PinDigits_lock {
+    justify-content: center;
+}
+
+.PinDigits__Input {
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 1.25rem;
+    text-align: center;
+    transition: all 0.2s;
+    -webkit-text-security: disc;
+}
+
+.PinDigits__Input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(26, 115, 231, 0.1);
+}
+
+.PinDigits__Input_filled {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}

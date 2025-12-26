@@ -7,24 +7,41 @@
 </head>
 
 <body class="Popup">
-    <h2 class="Popup__Header">
-        <img src="icons/icon48.png" alt="Icon" class="Popup__HeaderIcon">
-        <span data-i18n="popup.header">Thai TM30 Helper</span>
-        <div class="Popup__LangToggle">
-            <button id="lang-en" class="Popup__LangBtn">EN</button>
-            <button id="lang-th" class="Popup__LangBtn">TH</button>
+    <!-- PIN Lock Screen -->
+    <div id="pin-lock" class="PinLock" style="display: none;">
+        <div class="PinLock__Icon">🔒</div>
+        <h3 class="PinLock__Title" data-i18n="pin.title">Enter PIN</h3>
+        <div class="PinDigits PinDigits_lock" id="pin-lock-digits" role="group" aria-label="PIN code input">
+            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" aria-label="PIN digit 1">
+            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" aria-label="PIN digit 2">
+            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" aria-label="PIN digit 3">
+            <input type="password" class="PinDigits__Input" maxlength="1" inputmode="numeric" aria-label="PIN digit 4">
         </div>
-    </h2>
-    <div id="person-list" class="Popup__PersonList">
-        <!-- List will be injected here -->
+        <p id="pin-error" class="PinLock__Error" style="display: none;" data-i18n="pin.error">Incorrect PIN</p>
+        <p id="pin-attempts" class="PinLock__Attempts" style="display: none;"></p>
+        <button id="pin-reset-btn" class="PinLock__ResetBtn" style="display: none;" data-i18n="pin.forgot">Forgot PIN?
+            Reset all data</button>
     </div>
-    <div class="Popup__Footer">
-        <button id="open-options" class="Popup__BtnManage" data-i18n="popup.manageProfiles">Manage Profiles</button>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <h2 class="Popup__Header">
+            <img src="icons/icon48.png" alt="Icon" class="Popup__HeaderIcon">
+            <span data-i18n="popup.header">Thai TM30 Helper</span>
+        </h2>
+        <div id="person-list" class="Popup__PersonList">
+            <!-- List will be injected here -->
+        </div>
+        <div class="Popup__Footer">
+            <button id="open-options" class="Popup__BtnManage" data-i18n="popup.settings">Settings</button>
+        </div>
     </div>
+
     <script src="locales/en.js"></script>
     <script src="locales/th.js"></script>
     <script src="i18n.js"></script>
     <script src="storage.js"></script>
+    <script src="pin.js"></script>
     <script src="popup.js"></script>
 </body>
 

@@ -6,13 +6,14 @@
 
 ## ✨ Features
 
-- **Profile Management:** Store multiple family members or recurring guests for quick access.
-- **Instant Auto-fill:** Single-click injection into the official TM30 web forms.
-- **Excel Import/Export:** Export profiles to Excel for bulk TM30 submission via immigration's import feature.
-- **Smart Mapping:** Automatically handles complex fields like Nationalities, Gender, and Dates.
-- **Modern UI:** Clean, intuitive interface with a prioritized workflow.
+- **👥 Profile Management:** Store multiple family members or recurring guests for quick access.
+- **⚡ Instant Auto-fill:** Single-click injection into the official TM30 web forms.
+- **📊 Excel Import/Export:** Export profiles to Excel for bulk TM30 submission via immigration's import feature.
+- **🧠 Smart Mapping:** Automatically handles complex fields like Nationalities, Gender, and Dates.
+- **🔐 PIN Protection:** Secure your data with a 4-digit PIN, auto-lock on inactivity, and brute-force protection.
+- **✨ Modern UI:** Clean, intuitive interface with a prioritized workflow.
 - **🇹🇭 Thai language support.**
-- **Privacy First:** All data is stored locally in your browser's storage. Nothing is sent to external servers or cloud services.
+- **🛡️ Privacy First:** All data is stored locally in your browser's storage. Nothing is sent to external servers or cloud services.
 
 ## 🚀 Installation
 

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2025-12-26
+
+### Added
+- PIN-code lock for extension
+- Auto-lock by timer
+- Protection against PIN brute-force
+
 ## [1.2.0] - 2025-12-20
 
 ### Added
