@@ -46,6 +46,7 @@ const LOCALE_EN = {
     "popup.emptyState": "No saved profiles found",
     "popup.editProfile": "Edit Profile",
     "popup.error.refresh": "Error: Please refresh the TM30 form page to enable the extension.",
+    "popup.error.wrongUrl": "Please go to https://tm30.immigration.go.th/tm30/#/external/ifa/add and click on the person again to fill in the data.",
 
     // PIN
     "pin.title": "Enter PIN",

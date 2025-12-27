@@ -125,7 +125,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Click on info area to fill form
                 info.addEventListener('click', () => {
                     fillForm(person);
-                    window.close();
                 });
 
                 const editBtn = document.createElement('button');
@@ -148,9 +147,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const fillForm = (person) => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0]) {
+                // Check if we are on the correct URL
+                const url = tabs[0].url;
+                if (!url || !url.includes('/external/ifa/add')) {
+                    alert(I18n.t('popup.error.wrongUrl'));
+                    return;
+                }
+
                 chrome.tabs.sendMessage(tabs[0].id, { action: 'FILL_FORM', person }, (response) => {
                     if (chrome.runtime.lastError) {
                         alert(I18n.t('popup.error.refresh'));
+                    } else {
+                        window.close();
                     }
                 });
             }
