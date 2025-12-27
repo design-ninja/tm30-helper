@@ -793,6 +793,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await loadPersons();
     if (editId) {
-        editPerson(parseInt(editId));
+        editPerson(editId);
     }
 });
